@@ -1,0 +1,28 @@
+---
+- name: install epel-release
+  yum:
+    name: 
+    - epel-release
+    state: latest 
+ 
+
+- name: install nginx
+  yum:
+    name: 
+    - epel-release
+    - nginx
+    state: latest 
+  notify: restart nginx  
+
+- name: "copy config file"
+  copy: 
+    src: "./files/default.conf"
+    dest: "/etc/nginx/conf.d/"
+  notify: restart nginx
+
+- name: "copy cep.html"
+  copy: 
+    src: "./files/cep.html"
+    dest: "/usr/share/nginx/html/"
+  notify: restart nginx
+...

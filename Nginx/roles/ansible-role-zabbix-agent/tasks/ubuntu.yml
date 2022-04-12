@@ -1,0 +1,30 @@
+---
+- name: Download Zabbix Repository Ubuntu
+  get_url: 
+    url: https://repo.zabbix.com/zabbix/5.4/ubuntu/pool/main/z/zabbix-release/zabbix-release_5.4-1+ubuntu20.04_all.deb
+    dest: /tmp/zabbix-release_5.4-1+ubuntu20.04_all.deb
+  
+- name: Install Zabbix Repository Ubuntu
+  dpkg_selections:
+    name: zabbix-release_5.4-1+ubuntu20.04_all.deb
+    selection: install
+
+- name: Update SO Ubuntu
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+
+- name: Install Zabbix Agent Ubuntu
+  apt:
+    name: zabbix_agent2
+    state: latest
+  
+- name: Copy template zabbix-agent.conf Ubuntu
+  template:
+    src: zabbix_agent.conf.j2
+    dest: /etc/zabbix/zabbix-agent2.conf
+
+- name: Start service
+  service: name=zabbix-agent2 state=restarted  enabled=yes
+...
